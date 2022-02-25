@@ -84,7 +84,7 @@ class _InPicturePageState extends State<InPicturePage> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
                     image: DecorationImage(
-                      image: NetworkImage(widget.imag.urls.small),
+                      image: NetworkImage(widget.imag.urls.full),
                       fit: BoxFit.cover,
                     ),
                   ),

@@ -10,16 +10,13 @@ import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:p_interest/model/model.dart';
-import 'package:p_interest/page/chat_page.dart';
-import 'package:p_interest/page/search_page.dart';
-import 'package:p_interest/page/second_search.dart';
-import 'package:p_interest/page/sliver_up.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../model/model.dart';
 import '../service/servics.dart';
 import 'in_picture_page.dart';
+import 'log_model.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -107,6 +104,7 @@ class _HomePageState extends State<HomePage> {
   void _showResponse(String response) {
     List<Post> post = Network.parsePostList(response);
     if (kDebugMode) {
+      Log.e(response);
       print(Post);
     }
     setState(() {
@@ -164,6 +162,7 @@ class _HomePageState extends State<HomePage> {
             // Save the file
             File imageFile = File("${generalDownloadDir.path}/$filename.jpg");
             if (kDebugMode) {
+              Log.d(generalDownloadDir.path);
               print(generalDownloadDir.path);
             }
             await imageFile.writeAsBytes(response.bodyBytes);
@@ -200,7 +199,7 @@ class _HomePageState extends State<HomePage> {
       }
     }
   }
-///========================================================
+///========================================================download
   ///#Initstate
   @override
   void initState() {

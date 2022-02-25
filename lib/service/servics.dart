@@ -1,17 +1,26 @@
 import 'dart:convert';
-import 'package:http/http.dart';
+import 'package:dio/dio.dart';
+//import 'package:http/http.dart';
 
 import '../model/model.dart';
+import '../page/log_model.dart';
 
 class Network {
   static bool isTester = true;
-
-  static String SERVER_DEVELOPMENT = "api.unsplash.com";
-  static String SERVER_PRODUCTION = "api.unsplash.com/photos??page=1&per_page=3";
-
+///For DioNetwork
+  static String SERVER_DEVELOPMENT = "https://api.unsplash.com";
+  static String SERVER_PRODUCTION = "https://api.unsplash.com";
+  ///For DioNetwork
+  ///////////////////////////////////////////////////////////////
+  /// For HTTP netwok
+  //static String SERVER_DEVELOPMENT = "/api.unsplash.com";
+  //static String SERVER_PRODUCTION = "/api.unsplash.com";
+  /// For HTTP netwok
+  ///
+  ///
   static Map<String, String> getHeaders() {
     Map<String, String> headers = {
-      'Authorization': 'Client-ID sLy7DxJOs-rkxl2TqpgNrZz89z70WV-ecUyq9VGnncg',
+      'Authorization': 'Client-ID UtpT8QJXvvWf_AfZ2ycWf4uRMopE1gk4XUgoVr1aT1o',
       'Accept-Version': 'v1',
     };
     return headers;
@@ -24,49 +33,125 @@ class Network {
 
   /// /* Http Requests */
 
-  static Future<String?> GET(String api, Map<String, String> params) async {
-    var uri = Uri.https(getServer(), api, params); // http or https
-    var response = await get(uri, headers: getHeaders());
-    if (response.statusCode == 200) return response.body;
 
+  // static Future<String?> GET(String api, Map<String, String> params) async {
+  //   var uri = Uri.https(getServer(), api, params); // http or https
+  //   var response = await get(uri, headers: getHeaders());
+  //   if (response.statusCode == 200) return response.body;
+  //
+  //   return null;
+  // }
+
+
+  // static Future<String?> POST(String api, Map<String, String> params) async {
+  //   var uri = Uri.https(getServer(), api); // http or https
+  //   var response =
+  //   await post(uri, headers: getHeaders(), body: jsonEncode(params));
+  //
+  //   if (response.statusCode == 200 || response.statusCode == 201) {
+  //     return response.body;
+  //   }
+  //   return null;
+  // }
+  // static Future<String?> PUT(String api, Map<String, String> params) async {
+  //   var uri = Uri.https(getServer(), api); // http or https
+  //   var response = await put(uri, headers: getHeaders(), body: jsonEncode(params));
+  //
+  //   if (response.statusCode == 200) return response.body;
+  //   return null;
+  // }
+  //
+  // static Future<String?> PATCH(String api, Map<String, String> params) async {
+  //   var uri = Uri.https(getServer(), api); // http or https
+  //   var response =
+  //   await patch(uri, headers: getHeaders(), body: jsonEncode(params));
+  //   if (response.statusCode == 200) return response.body;
+  //
+  //   return null;
+  // }
+  //
+  // static Future<String?> DEL(String api, Map<String, String> params) async {
+  //   var uri = Uri.https(getServer(), api, params); // http or https
+  //   var response = await delete(uri, headers: getHeaders());
+  //   if (response.statusCode == 200) return response.body;
+  //
+  //   return null;
+  // }
+  //
+  //
+  /// files, pdfs etc
+  // Future<String?> MULTIPART(String api, String filePath, Map<String , String> params) async {
+  // var uri = Uri.https(getServer(),api);
+  // var request = MultipartRequest("POST", uri);
+  // request.headers.addAll(params);
+  // request.files.add(await MultipartFiles.fromPath("picture",filePath));
+  //
+  // var res = await request.send();
+  // return res.reasonPhrase;
+  // }
+  //
+  //
+  //
+  //
+  //
+  /// /* Http Requests */
+
+  ///====================================================================
+  /// /*  Dio Request*/
+  static Future<String?> GET(String api, Map<String, dynamic>? params) async {
+    var options = BaseOptions(
+      baseUrl: getServer(),
+      headers: getHeaders(),
+      connectTimeout: 10000,
+      receiveTimeout: 3000,
+    );
+    Response response = await Dio(options).get(api, queryParameters: params);
+    Log.d(jsonEncode(response.data));
+    if (response.statusCode == 200) return jsonEncode(response.data);
     return null;
   }
 
-  static Future<String?> POST(String api, Map<String, String> params) async {
-    var uri = Uri.https(getServer(), api); // http or https
-    var response =
-    await post(uri, headers: getHeaders(), body: jsonEncode(params));
-
-    if (response.statusCode == 200 || response.statusCode == 201)
-      return response.body;
+  static Future<String?> POST(String api, Map<String, dynamic>? params) async {
+    var options = BaseOptions(
+      baseUrl: getServer(),
+      headers: getHeaders(),
+      connectTimeout: 10000,
+      receiveTimeout: 3000,
+    );
+    Response response = await Dio(options).post(api, queryParameters: params);
+    Log.d(jsonEncode(response.data));
+    if (response.statusCode == 200) return jsonEncode(response.data);
     return null;
   }
 
-  static Future<String?> PUT(String api, Map<String, String> params) async {
-    var uri = Uri.https(getServer(), api); // http or https
-    var response =
-    await put(uri, headers: getHeaders(), body: jsonEncode(params));
-
-    if (response.statusCode == 200) return response.body;
+  static Future<String?> PATCH(String api, Map<String, dynamic>? params) async {
+    var options = BaseOptions(
+      baseUrl: getServer(),
+      headers: getHeaders(),
+      connectTimeout: 5000,
+      receiveTimeout: 2000,
+    );
+    Response response = await Dio(options).patch(api, queryParameters: params);
+    Log.d(jsonEncode(response.data));
+    if (response.statusCode == 200) return jsonEncode(response.data);
     return null;
   }
 
-  static Future<String?> PATCH(String api, Map<String, String> params) async {
-    var uri = Uri.https(getServer(), api); // http or https
-    var response =
-    await patch(uri, headers: getHeaders(), body: jsonEncode(params));
-    if (response.statusCode == 200) return response.body;
-
+  static Future<String?> DEl(String api, Map<String, dynamic>? params) async {
+    var options = BaseOptions(
+      baseUrl: getServer(),
+      headers: getHeaders(),
+      connectTimeout: 10000,
+      receiveTimeout: 3000,
+    );
+    Response response = await Dio(options).delete(api, queryParameters: params);
+    Log.d(jsonEncode(response.data));
+    if (response.statusCode == 200) return jsonEncode(response.data);
     return null;
   }
 
-  static Future<String?> DEL(String api, Map<String, String> params) async {
-    var uri = Uri.https(getServer(), api, params); // http or https
-    var response = await delete(uri, headers: getHeaders());
-    if (response.statusCode == 200) return response.body;
+  /// /*  Dio Request*/
 
-    return null;
-  }
 
   /// /* Http Apis */
   //photos??page=1&per_page=3
@@ -88,7 +173,7 @@ class Network {
     return params;
   }
 
-  ///#########
+  ///#LoadMore
   static Map<String , String> paramsPage(int pageNum){
     Map<String ,  String> params = {};
     params.addAll({
